@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transaction Processing System</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <header>
+      <h1>Transaction Processing System</h1>
+      <p>Manage accounts, deposits, withdrawals and view all records.</p>
+    </header>
+
+    {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+    {% if message %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <section class="dashboard-card">
+      <h2>Accounts Dashboard</h2>
+      {% if accounts %}
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Account #</th>
+                <th>Name</th>
+                <th>Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for account in accounts %}
+                <tr>
+                  <td>{{ account.account_number }}</td>
+                  <td>{{ account.name }}</td>
+                  <td>${{ "%.2f" | format(account.balance) }}</td>
+                  <td>{{ account.status }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="summary">
+          <strong>Total Accounts:</strong> {{ accounts|length }}
+          <strong>Total Balance:</strong> ${{ "%.2f" | format(total_balance) }}
+        </div>
+      {% else %}
+        <p class="empty-state">No accounts available yet. Add a new account to get started.</p>
+      {% endif %}
+    </section>
+
+    <section class="grid-panel">
+      <article class="card">
+        <h2>Create New Account</h2>
+        <form action="/add" method="POST">
+          <label for="name">Account Holder Name</label>
+          <input type="text" id="name" name="name" maxlength="50" required />
+
+          <label for="balance">Initial Balance ($)</label>
+          <input type="number" id="balance" name="balance" step="0.01" min="0" required />
+
+          <button type="submit">Create Account</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Process Transaction</h2>
+        <form action="/transaction" method="POST">
+          <label for="account_number">Account Number</label>
+          <input type="number" id="account_number" name="account_number" min="1001" required />
+
+          <label for="operation">Transaction Type</label>
+          <select id="operation" name="operation" required>
+            <option value="deposit">Deposit</option>
+            <option value="withdraw">Withdrawal</option>
+          </select>
+
+          <label for="amount">Amount ($)</label>
+          <input type="number" id="amount" name="amount" step="0.01" min="0.01" required />
+
+          <button type="submit">Submit Transaction</button>
+        </form>
+      </article>
+    </section>
+
+    <footer>
+      <p>Powered by Flask • Data saved in <code>accounts.txt</code></p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+1001|AliceJohnson|5500.50|Active
+1002|BobWilliams|3250.75|Active
+1003|CarolDavis|1500.00|Active
+1004|DavidAnderson|0.00|Inactive
+1005|EmmaThompson|7890.25|Active
